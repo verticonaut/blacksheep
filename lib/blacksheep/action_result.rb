@@ -1,15 +1,15 @@
 module Blacksheep
-  class JsonResult
+  class ActionResult
 
-    attr_reader :json, :status
+    attr_reader :data, :status
 
-    def initialize(json, status)
-      @json = json
+    def initialize(data, status)
+      @data = data
       @status = status
     end
 
-    def set_json(value)
-      @json = value
+    def set_data(value)
+      @data = value
 
       self
     end
@@ -24,9 +24,9 @@ module Blacksheep
       @status == :ok
     end
 
-    def render(json_wrap: 'data')
+    def render_json(json_wrap: 'data')
       {
-        json:   wrap(json, json_wrap: json_wrap),
+        json:   wrap(@data, json_wrap: json_wrap),
         status: status
       }
     end

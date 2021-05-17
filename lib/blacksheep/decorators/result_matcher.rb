@@ -5,19 +5,19 @@ module Blacksheep
     # @class Blacksheep::Decorators::ResultMatcher
     class ResultMatcher < ActionDecorator
       Matcher = -> {
-        # Match `json_result` with status :ok for success
-        success_case = Dry::Matcher::Case.new do |json_result, _|
-          if json_result.success?
-            json_result
+        # Match `action_result` with status :ok for success
+        success_case = Dry::Matcher::Case.new do |action_result, _|
+          if action_result.success?
+            action_result
           else
             # this is a constant from dry/core/constants
             Dry::Matcher::Undefined
           end
         end
 
-        # Match `json_result` with status not :ok` for failure - other status' can be distinguished
-        failure_case = Dry::Matcher::Case.new do |json_result, patterns|
-          if !json_result.success! && (patterns.empty? || patterns.include?(json_result.status))
+        # Match `action_result` with status not :ok` for failure - other status' can be distinguished
+        failure_case = Dry::Matcher::Case.new do |action_result, patterns|
+          if !action_result.success! && (patterns.empty? || patterns.include?(action_result.status))
             value
           else
             Dry::Matcher::Undefined
@@ -35,7 +35,7 @@ module Blacksheep
       end
 
       def perform(*)
-        raise Blackseep::Error, 'JsonResultMatcher does not support #perform'
+        raise Blackseep::Error, 'ResultMatcher does not support #perform'
       end
 
     end

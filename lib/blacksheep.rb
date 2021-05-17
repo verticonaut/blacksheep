@@ -1,6 +1,5 @@
 require "blacksheep/version"
-require "blacksheep/json_meta"
-require "blacksheep/json_result"
+require "blacksheep/action_result"
 require "blacksheep/action_decorator"
 require "blacksheep/decorators/default_error_handler"
 require "blacksheep/decorators/json_transformer"

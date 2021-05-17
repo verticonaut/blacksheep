@@ -14,7 +14,7 @@ module Blacksheep
 
         transformed_json = transform_result(json)
 
-        JsonResult.new(transformed_json, :ok)
+        ActionResult.new(transformed_json, :ok)
       end
 
       def perform(params, current_user: nil, **options, &block)
@@ -25,7 +25,7 @@ module Blacksheep
         json = block.call(transformed_params)
         transformed_json = transform_result(json)
 
-        JsonResult.new(transformed_json, :ok)
+        ActionResult.new(transformed_json, :ok)
       end
 
 

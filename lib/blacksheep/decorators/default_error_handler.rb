@@ -77,7 +77,7 @@ module Blacksheep
         }
         status = :internal_server_error # 500
 
-        JsonResult.new(json, status)
+        ActionResult.new(json, status)
       end
 
       # def not_authorized_pointer(exception)
