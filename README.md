@@ -36,12 +36,12 @@ Core of blacksheep is the `Blacksheep::Action`. It provides basic functionality 
 
 
 ```ruby
-##perform sample
+#perform sample
 action_result = Blacksheep::Action.new.perform(params) do |params|
   # do somethin with the params that return a `Blacksheep::ActionResult`
 end
 
-##perform sample
+#call sample
 action_result = MyAction.new.call(params, current_user: current_user)
 ```
 
