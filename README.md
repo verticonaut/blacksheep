@@ -24,15 +24,15 @@ Or install it yourself as:
 
 ### Actions
 
-Core if blacksheep is the Blacksheep::Action. It provides basic fuctionality to handle rest API actions - but can handle other actions as well. The core methods of Actions are:
+Core of blacksheep is the `Blacksheep::Action`. It provides basic functionality to handle rest API actions - but can handle other actions as well. The core methods of actions are:
 
-  * #perform, and…
-  * #call
+  * #perform with a block that implements the action
+  * #call on an action instance for processing and a potential block for result matching (see dcorators below).
 
 `#perform` takes a block that is executed with the params passed. #perform has the following api:
   `#perform(params, current_user: (default to nil), **options)`
 
-`#call` can be used when a Blacksheep::Action is sublassed as an action processing its opertation in a call method with the same signature of `#perform`
+`#call` can be used when a Blacksheep::Action is sublassed as an action processing its opertation in a call method with the same signature of `#perform`. When using the `ResultMatcher` decorator a block can be used for result matching.
 
 
 ```ruby
@@ -50,14 +50,14 @@ action_result = MyAction.new.call(params, current_user: current_user)
 
 ### Decorators
 
-This alone does not give any benefit. It more interesting to modifiy the action with decorators such as:
+This alone does not give any benefit. Modifying the action with decorators adds additional functionality:
 
   * `JsonTransformer`
   * `Localizer`
   * `DefaultErrorHandler`
   * `ResultMatcher`
 
-The decaorators can be configured globaly by defining them in an initializer.
+The decaorators can be configured globally by defining them in an initializer.
 
 ```ruby
 # Defining decorator wheras innermost is first
@@ -74,7 +74,7 @@ A localizer sets the I18n locale when passed in a request parameter named `_loca
 
 #### Blacksheep::Decorators::DefaultErrorHandler
 
-A default error handler can be used in API opertions. The handler catches an error and returns a JsonResultObject such as
+A default error handler can be used in API opertions. The handler catches an error and returns an ActionResult such as…
 
 ```ruby
 def handle_exception(exception)
@@ -93,20 +93,20 @@ def handle_exception(exception)
 end
 ```
 
-You can write your own Errorhandler by including the module `Blacksheep::Decorators::ErrorHandler` and implementing the method `#handle(exception)`.
+You can write your own ErrorHandler by including the module `Blacksheep::Decorators::ErrorHandler` and implementing the method `#handle_exception(<Exception>)`.
 
 
 #### Blacksheep::Decorators::JsonTransformer
 
-Assuming the params is a json payload with a specific caseing (e.g. camelCase when used in a JS application such as vue) the JsonTransfomer takes the params and tranforms it's keys into snake_case as used in ruby often.
-The request has to define the case passed (and hence desired response casing) in the parameter `_case`. If the case is requests as `camel` then paramter keys are tranformed to `snake_case` before going into the action and are transformed back into CamelCase when leaving the operation.
+Assuming the params is a json payload with a specific caseing (e.g. camelCase when used in a JS application such as Vue) the JsonTransfomer takes the params and transforms it's keys into snake_case as used in ruby often.
+The request has to define the case passed (and hence desired response casing) in the parameter `_case`. If the case is requests as `camel` then parameter keys are transformed to `snake_case` before beeing passed into the action and are transformed back into CamelCase when leaving the operation.
 
 If JsonTransfomer is used the action should return a simple JSON structure which is transfformed and stored in an ActionResult.
 
 
 #### Blacksheep::Decorators::ResultMatcher
 
-This decorator can be used when implementing your own actions by subclassing `Blacksheep::Action` and using the  `#call` style for processing. Adding the matcher decorator enables to write a matchers such as e.g.
+This decorator can be used when implementing your own actions by subclassing `Blacksheep::Action` and using the  `#call` style for processing. Adding the `ResultMatcher` decorator enables to write a matcher block such as…
 
 ```ruby
 MyAction.new.call(params) do |m|
@@ -122,7 +122,7 @@ MyAction.new.call(params) do |m|
 end
 ```
 
-The action has to return a Blacksheep::ActionResult which is check for status :ok in sucess case and any other status in failure case.
+The action has to return a Blacksheep::ActionResult which is checked for status `:ok` for success case and any other status in failure case.
 
 
 ## Development
@@ -134,7 +134,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ```
 gem build blacksheep
 gem push blacksheep-0.x.y.gem
-```
+``
 
 ## Contributing
 
