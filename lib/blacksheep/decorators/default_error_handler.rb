@@ -4,7 +4,6 @@ module Blacksheep
     class DefaultErrorHandler < ActionDecorator
 
       def call(*)
-        puts error_handler: "*" * 50
         super
       rescue => exception
         handle(exception)

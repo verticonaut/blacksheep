@@ -31,7 +31,6 @@ module Blacksheep
       include Dry::Matcher.for(:call, with: Matcher)
 
       def call(*)
-        puts matcher: "*" * 50
         super
       end
 

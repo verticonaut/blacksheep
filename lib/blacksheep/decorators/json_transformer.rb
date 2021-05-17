@@ -6,7 +6,6 @@ module Blacksheep
       attr_reader :case, :params
 
       def call(params, **options)
-        puts transformer: "*" * 50
         detect_case(params)
 
         transformed_params = self.transformed_params(params)
