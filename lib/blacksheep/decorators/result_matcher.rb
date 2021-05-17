@@ -35,7 +35,7 @@ module Blacksheep
       end
 
       def perform(*)
-        raise Blackseep::Error, 'ResultMatcher does not support #perform'
+        raise Blacksheep::Error, 'ResultMatcher does not support #perform'
       end
 
     end

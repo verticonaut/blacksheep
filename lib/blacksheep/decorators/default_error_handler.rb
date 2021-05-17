@@ -2,18 +2,7 @@ module Blacksheep
   module Decorators
     # @class Blacksheep::Decorators::DefaultErrorHandler
     class DefaultErrorHandler < ActionDecorator
-
-      def call(*)
-        super
-      rescue => exception
-        handle(exception)
-      end
-
-      def perform(*)
-        super
-      rescue => exception
-        handle(exception)
-      end
+      include ErrorHandler
 
       def handle(exception)
         json = status = nil

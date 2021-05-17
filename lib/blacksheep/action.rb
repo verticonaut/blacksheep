@@ -57,8 +57,8 @@ module Blacksheep
       block.call(params)
     end
 
-    def action_result(json, status: :ok)
-      ActionResult.new(json, status)
+    def action_result(data, status: :ok)
+      ActionResult.new(data, status)
     end
 
   end

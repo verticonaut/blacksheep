@@ -41,7 +41,7 @@ module Blacksheep
           when 'camel'
             snakecase_keys(params)
           else
-            raise Blackseep::Error, "unknown_case #{@case}"
+            raise Blacksheep::Error, "unknown_case #{@case}"
         end
       end
 
@@ -53,14 +53,22 @@ module Blacksheep
       # @return [Array, Hash] The rsult structure with keys converted to source caseing
       # @see #camelize_keys
       def transform_result(obj)
-        case @case
-          when 'snake', 'as_is'
-            obj
-          when 'camel'
-            camelize_keys(obj)
-          else
-            raise Blackseep::Error, "unknown_case #{@case}"
+        is_action_result, data = if obj.kind_of?(Blacksheep::ActionResult)
+          [ true, obj.data ]
+        else
+          [ false, obj ]
         end
+
+        converted_data = case @case
+          when 'snake', 'as_is'
+            data
+          when 'camel'
+            camelize_keys(data)
+          else
+            raise Blacksheep::Error, "unknown_case #{@case}"
+        end
+
+        is_action_result ? obj.set_data(converted_data) : converted_data
       end
 
       #
