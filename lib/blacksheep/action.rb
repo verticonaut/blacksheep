@@ -28,11 +28,16 @@ module Blacksheep
         @@decorators ||= []
       end
 
+      #
+      # Adds a decorator to the list of decorated to be applied on Balcksheep::Actions
+      # @param decorator [type] [description]
+      #
+      # @return [type] [description]
       def add_decorator(decorator)
-        decorators << decorator
+        decorators << decorator unless decorators.include?(decorator)
       end
 
-      def new(*)
+      def new(*arguments, &block)
         instance = super
 
         decorators.each do |decorator|

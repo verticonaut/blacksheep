@@ -5,10 +5,10 @@ module Blacksheep
 
       attr_reader :case, :params
 
-      def call(params, **options)
+      def call(params, current_user: nil, **options)
         detect_case(params)
 
-        transformed_params = self.transformed_params(params)
+        transformed_params = self.transform_params(params)
 
         json = super(transformed_params, **options)
 
@@ -20,9 +20,10 @@ module Blacksheep
       def perform(params, current_user: nil, **options, &block)
         detect_case(params)
 
-        transformed_params = self.transformed_params(params)
+        transformed_params = self.transform_params(params)
 
-        json = block.call(transformed_params)
+        json = super(transformed_params, current_user: current_user, **options, &block)
+
         transformed_json = transform_result(json)
 
         ActionResult.new(transformed_json, :ok)
@@ -34,7 +35,7 @@ module Blacksheep
       #
       # @return [Array, Hash] The params converted into snake_case
       # @see #snakecase_keys
-      def transformed_params(params)
+      def transform_params(params)
         case @case
           when 'snake', 'as_is'
             params

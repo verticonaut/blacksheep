@@ -1,7 +1,7 @@
 module Blacksheep
   module Decorators
-    # @class Blacksheep::Decorators::ErrorHandler
-    class ErrorHandler
+    # @module Blacksheep::Decorators::ErrorHandler
+    module ErrorHandler
 
       def call(*)
         super
