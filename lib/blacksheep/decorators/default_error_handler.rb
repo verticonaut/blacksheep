@@ -5,8 +5,7 @@ module Blacksheep
       include ErrorHandler
 
       def handle(exception)
-        json = nil
-        status = :internal_server_error
+        json = status = nil
 
         case exception
           when Blacksheep::ActionError
@@ -20,6 +19,8 @@ module Blacksheep
                 detail: exception.message,
               ]
             }
+
+            status = exception.status
 
             #   when Pundit::NotAuthorizedError
             #     json = {
@@ -55,6 +56,8 @@ module Blacksheep
               ]
             }
         end
+
+        status ||= :internal_server_error
 
         ActionResult.new(json, status)
       end
