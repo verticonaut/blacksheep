@@ -12,7 +12,7 @@ module Blacksheep
       def success(message)
         json = {
           _meta: {
-            message: "BusinessCase #{business_case.sls_ui} with ScanId #{business_case.scan_id} signedOff"
+            message: message
           }
         }
 
