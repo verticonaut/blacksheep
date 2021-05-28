@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    blacksheep (0.2.3)
+    blacksheep (0.3.0)
       dry-matcher
 
 GEM

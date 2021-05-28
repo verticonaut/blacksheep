@@ -5,66 +5,56 @@ module Blacksheep
       include ErrorHandler
 
       def handle(exception)
-        json = status = nil
+        json = nil
+        status = :internal_server_error
 
-        # case exception
-        #   when Exceptions::ValidationException
-        #     errors = []
-        #     exception.model.errors.each do |attribute, message|
-        #       errors << {
-        #         title:  "'#{attribute}' validation error",
-        #         detail: message,
-        #       }
-        #     end
-        #     json = {
-        #       errors: errors
-        #     }
-        #     status = :unprocessable_entity # 422
-        #   when Pundit::NotAuthorizedError
-        #     json = {
-        #       errors: [
-        #         pointer: {
-        #           source: not_authorized_pointer(exception)
-        #         },
-        #         title: "#{exception.class}",
-        #         detail: "#{exception.message}",
-        #       ]
-        #     }
-        #     status = :unauthorized # 401
-        #   when Exceptions::AuthenticationInvalid
-        #     json = {
-        #       errors: [
-        #         pointer: {
-        #           source: 'Secured Module'
-        #         },
-        #         title: "#{exception.class}",
-        #         detail: "#{exception.message}",
-        #       ]
-        #     }
-        #     status = :unauthorized # 401
-        #   else
-        #     json = {
-        #       errors: [
-        #         pointer: {
-        #           source: 'Internal'
-        #         },
-        #         title: "#{exception.class}",
-        #         detail: "#{exception.message}",
-        #       ]
-        #     }
-        #     status = :internal_server_error # 500
-        # end
+        case exception
+          when Blacksheep::ActionError
+            json = {
+              errors: [
+                pointer: {
+                  source:  exception.backtrace.first,
+                  identifier: exception.identifier,
+                },
+                title: exception.title,
+                detail: exception.message,
+              ]
+            }
 
-        json = {
-          errors: [
-            pointer: {
-              source: 'Internal'
-            },
-            title: "#{exception.class}",
-            detail: "#{exception.message}",
-          ]
-        }
-        status = :internal_server_error # 500
+            #   when Pundit::NotAuthorizedError
+            #     json = {
+            #       errors: [
+            #         pointer: {
+            #           source: not_authorized_pointer(exception)
+            #         },
+            #         title: "#{exception.class}",
+            #         detail: "#{exception.message}",
+            #       ]
+            #     }
+            #     status = :unauthorized # 401
+            #   when Exceptions::AuthenticationInvalid
+            #     json = {
+            #       errors: [
+            #         pointer: {
+            #           source: 'Secured Module'
+            #         },
+            #         title: "#{exception.class}",
+            #         detail: "#{exception.message}",
+            #       ]
+            #     }
+            #     status = :unauthorized # 401
+
+          else
+            json = {
+              errors: [
+                pointer: {
+                  source: 'Internal'
+                },
+                title: "#{exception.class}",
+                detail: "#{exception.message}",
+              ]
+            }
+        end
 
         ActionResult.new(json, status)
       end

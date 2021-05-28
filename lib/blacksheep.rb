@@ -1,5 +1,6 @@
 require "blacksheep/version"
 require "blacksheep/action_result"
+require "blacksheep/action_error"
 require "blacksheep/action_decorator"
 require "blacksheep/decorators/error_handler"
 require "blacksheep/decorators/default_error_handler"

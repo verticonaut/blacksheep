@@ -8,6 +8,33 @@ module Blacksheep
       @status = status
     end
 
+    class << self
+      def success(message)
+        json = {
+          _meta: {
+            message: "BusinessCase #{business_case.sls_ui} with ScanId #{business_case.scan_id} signedOff"
+          }
+        }
+
+        new(json, :ok)
+      end
+
+      def error(title: 'Error', message:, status: :internal_server_error, pointer: 'unspecified')
+        json = {
+          errors: [
+            pointer: {
+              source: pointer
+            },
+            title: title,
+            detail: message,
+          ]
+        }
+        status = :internal_server_error
+
+        new(json, status)
+      end
+    end
+
     def set_data(value)
       @data = value
 
