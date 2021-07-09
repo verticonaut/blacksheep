@@ -3,12 +3,16 @@ module Blacksheep
 
     attr_reader :data, :status
 
+    @render_http_status = true
+
     def initialize(data, status)
       @data = data
       @status = status
     end
 
     class << self
+      attr_accessor :render_http_status
+
       def success(message)
         json = {
           _meta: {
@@ -51,19 +55,32 @@ module Blacksheep
       @status == :ok
     end
 
-    def render_json(json_wrap: 'data')
-      {
-        json:   wrap(@data, json_wrap: json_wrap),
-        status: status
-      }
+    def render_http_status
+      self.class.render_http_status
+    end
+
+    def render_json(json_wrap: 'data', render_http_status: self.render_http_status, to: nil)
+      if to.nil?
+        return {
+          json: wrap_json(json_wrap)
+        }
+      end
+
+      if to.respond_to?(:render)
+        if render_http_status
+          to.render json: wrap_json(json_wrap), status: status
+        else
+          to.render json: wrap_json(json_wrap)
+        end
+      else
+        raise ArgumentError, "render target #{to.class} does not respond to #render"
+      end
     end
 
     private
 
-    def wrap(json, json_wrap:)
-      wrap = success? ? json_wrap : nil
-
-      wrap.present? ? { wrap => json } : json
+    def wrap_json(json_wrap)
+      json_wrap.present? && success? ? { json_wrap => @data } : @data
     end
 
   end

@@ -10,11 +10,9 @@ module Blacksheep
 
         transformed_params = self.transform_params(params)
 
-        json = super(transformed_params, **options)
+        result = super(transformed_params, **options)
 
-        transformed_json = transform_result(json)
-
-        ActionResult.new(transformed_json, :ok)
+        as_transformed_action_result(result)
       end
 
       def perform(params, current_user: nil, **options, &block)
@@ -22,11 +20,9 @@ module Blacksheep
 
         transformed_params = self.transform_params(params)
 
-        json = super(transformed_params, current_user: current_user, **options, &block)
+        result = super(transformed_params, current_user: current_user, **options, &block)
 
-        transformed_json = transform_result(json)
-
-        ActionResult.new(transformed_json, :ok)
+        as_transformed_action_result(result)
       end
 
 
@@ -50,16 +46,15 @@ module Blacksheep
       # Transform the obj with key in snake_case to the source case.
       # NOTE: leading underscored are preserved (e.g. _my_laptop => _myLaptop)
       #
-      # @param obj [Array, Hash] A result structure
+      # @param obj [Array, Hash, ActionResult] A result structure
       # @return [Array, Hash] The rsult structure with keys converted to source caseing
       # @see #camelize_keys
-      def transform_result(obj)
+      def as_transformed_action_result(obj)
         is_action_result, data = if obj.kind_of?(Blacksheep::ActionResult)
           [ true, obj.data ]
         else
           [ false, obj ]
         end
-
         converted_data = case @case
           when 'snake', 'as_is'
             data
@@ -69,7 +64,7 @@ module Blacksheep
             raise Blacksheep::Error, "unknown_case #{@case}"
         end
 
-        is_action_result ? obj.set_data(converted_data) : converted_data
+        is_action_result ? obj.set_data(converted_data) : ActionResult.new(converted_data, :ok)
       end
 
       #
