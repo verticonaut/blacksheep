@@ -55,6 +55,13 @@ module Blacksheep
       @status == :ok
     end
 
+    def success_message(message)
+      meta = json.fetch(:_meta) { |_key| json[:_meta] = {}; json[:_meta] }
+      meta[:message] = message
+
+      self
+    end
+
     def render_http_status
       self.class.render_http_status
     end
